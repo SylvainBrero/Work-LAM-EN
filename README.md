@@ -7,7 +7,7 @@ Celle-ci sera lue par un outil de dashboarding afin de pouvoir réaliser différ
 
 - Le fichier Script contient le code permettant l'importation, le traitement et l'exportation vers la base de données MySQL du fichier du département Finance, à l'origine sous la forme d'un Excel résultant d'une exécution logicielle
 
-## Plus en détail : SQL ##
+## Plus en détail : ##
 ### SMS_Update_meta :
 
 Les données SMS étant sous la forme d'une table par mois, ajoutée en début du mois M pour les données du mois M-1, il faut automatiser un processus de traitement de ces données dès leur ajout.
