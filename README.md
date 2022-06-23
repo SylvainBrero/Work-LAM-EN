@@ -1,38 +1,36 @@
-# Travaux-LAM
+# WORK - LAM
 
-Ce dossier contient principalement des extraits de codes développés pendant un stage de Data Analyste dans une start-up de télécommunications. Deux types sont présents :
+This repository contains extracts of my code that I developped during an internship as a Data Analyst in a telecom start-up. Two types are present :
+- Files having their names start with "SMS" are pieces of the SQL code that I used to analyse, calculate and sort all SMS-related data, and add them to a global (or aggregate) table, which will be the basis for the company's reporting dashboards.
 
-- Les fichiers présentant un nom commencant par SMS sont des extraits de code SQL permettant le traitement des données SMS de l'entreprise et leur ajout à une table agrégée sur la base de données.
-Celle-ci sera lue par un outil de dashboarding afin de pouvoir réaliser différents indicateurs visuels
-
-- Le fichier Script contient le code permettant l'importation, le traitement et l'exportation vers la base de données MySQL du fichier du département Finance, à l'origine sous la forme d'un Excel résultant d'une exécution logicielle
+- The "Script" file contains Python code allowing the import, processing and export to a SQL database all relevant information pertaining to the Finance departement, which used to be in an Excel File resulting of a financial management software.
 
 
 
-## Plus en détail : SQL ##
+## FOCUS  : SQL ##
 ### SMS_Update_meta :
 
-Les données SMS étant sous la forme d'une table par mois, ajoutée en début du mois M pour les données du mois M-1, il faut automatiser un processus de traitement de ces données dès leur ajout.
-Pour cela, une table Meta a été crée. Celle-ci recense les différentes tables présentes sur la base de données SMS, et leur affecte une valeur 'Processsed' (0 ou 1), en fonction de l'intégration ou non des données de cette table sur la table agrégée.
-Update_meta permet de mettre à jour cette table en récupérant les noms des tables de la base et en ajoutant les nouvelles tables avec une valeur de Processed à 0.
+All SMS-related data is received monthly, this data for the month "M" is added at the beginning of the month "M+1". There needs to be an automated processing script for them.
+In order to achieve that, a "Meta" table was created in the database. It identifies all different tables, and has them assigned with a "Processed" value (O or 1), depending on whether their data was processed and added to the aggregate table.
+Update_meta is used to update this "Meta" table by collecting the names of all other tables and adding the new ones with a "Processed" value of 0.
 
 
 ### SMS_Populate_ag :
 
-Cette procédure stockée ("SP") permet, pour les tables référencées dans la table Meta comme ayant une valeur de 'Processed' à 0, d'appliquer les différentes procédures stockées de traitement et ainsi intégrer les données de ces tables aux tables agrégées.
-Une mise à jour de la table Meta s'en suit pour signifier la prise en compte de ces données.
+This Stored Procedure ("SP") focuses on tables that have been added to the "Meta" table and that have a "Processed" value of 0. It enables the processing of this new data (via other stored procedures) and its addition to the aggregate table.
+An update to the "Meta" table, and more specifically the "Processed" value, will close this step and ensure that all data have been processed.
 
 
 ### SMS_Insert_sms_ag :
 
-Cette procédure stockée permet de grouper les données présentes sur une table SMS d'un mois selon différents critères établis (Client, indicatif téléphonique, statut du SMS etc) et d'insérer cette agrégation dans la table agrégée correspondante.
+This stored procedure will enable the processing of all available data on a specific SMS table, depending on previously-set criteria (Client name, Phone area code, SMS status, etc) and also the integration of this data to the corresponding aggregate table.
 
 
 
 
-## Plus en détail : Python ##
+## FOCUS : Python ##
 ### Script_finance :
 
-Ce script permet le traitement des données du Département Finance, initialement sous la forme d'un Excel ne pouvant être importé directement sur la base de données en raison de son formatage.
-L'objectif de ce script est de pouvoir permettre une gestion centralisée sur la base de données, et, dans une optique d'harmonisation des méthodes de visualisation des données de l'entreprise, de pouvoir gérer les indicateurs visuels sur le même outil de dashboarding que les données SMS.
-Le script gère l'importation du fichier Excel, la sauvegarde des plages temporelles du document, les sous-totaux correspondants (pour vérification), le retraitement des données, la lecture et l'importation des données de la table "balance_analytique" (résultant du traitement des données financières précédentes), puis l'exportation des nouvelles données vers cette table sur la base.
+This script was built for processing data from the Finance Departement, which were initially an Excel file which could not be directly imported and processed in the database due to formating modifications handled by their software.
+Its goal is to provide the department with a centralized management view and database, and allow for the standardization of all dashboarding solutions in the company. 
+In this script, the Excel file is imported, its timeframes and corresponding subtotals (which will be used as validation tools) are saved, data is processed and saved in the database.
